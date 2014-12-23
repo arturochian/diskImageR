@@ -644,14 +644,15 @@ singleAUC <- function(data, ML, ML2, stand, clearHaloStand, dotedge = 3.4, maxDi
 	yy2.1<- curve(ML2[[i]]$par[1], ML2[[i]]$par[2], ML2[[i]]$par[3],xx)
 	yy2.2<- curve(ML2[[i]]$par[5], ML2[[i]]$par[6], ML2[[i]]$par[7],xx)		
 	yy<- curve2(ML2[[i]]$par[1], ML2[[i]]$par[2], ML2[[i]]$par[3], ML2[[i]]$par[5], ML2[[i]]$par[6], ML2[[i]]$par[7], xx) 
-	ploty <- data[[i]]$x*ZOIcor[i]
+	#ZOI
+	ploty <- data[[i]]$x
 	ploty[ploty < 0] <-0
 	slope <- ML[[i]]$par[3]
 	ic50 <- ML[[i]]$par[2]	
 #	asym <- (ML2[[i]]$par[1]+ML2[[i]]$par[5]+min(data[[i]]$x))*ZOIcor[i]
-	asym <- (ML[[i]]$par[1]+min(data[[i]]$x))*ZOIcor[i]
+	asym <- (ML[[i]]$par[1]+min(data[[i]]$x))
 	plot(data[[i]]$distance, ploty, cex=0.7, col=grey(0.4), type="p", ylim=c(0, ymax), xlim=c(0, maxDist -dotedge), xaxt="n", yaxt="n", xlab="", ylab="")
-	yyplot <- (yy+min(data[[i]]$x))*ZOIcor[i]
+	yyplot <- (yy+min(data[[i]]$x))
 	yyplot[yyplot < 0] <- 0
 	points(exp(xx), yyplot, type="l", col="black", lwd=3)			
 
@@ -697,7 +698,7 @@ singleAUC <- function(data, ML, ML2, stand, clearHaloStand, dotedge = 3.4, maxDi
 	}		
 	
 	yy<- curve2(ML2[[i]]$par[1], ML2[[i]]$par[2], ML2[[i]]$par[3], ML2[[i]]$par[5], ML2[[i]]$par[6], ML2[[i]]$par[7], log(xx)) 
-	yy <- (yy+min(data[[i]]$x))*ZOIcor[i]
+	yy <- (yy+min(data[[i]]$x))
 	yy[yy < 0] <- 0
 	if (slope >1){
 		xx2 <- c(xx[1], xx, xx[length(xx)])
@@ -721,9 +722,9 @@ singleAUC <- function(data, ML, ML2, stand, clearHaloStand, dotedge = 3.4, maxDi
 			}			
 		}
 		if(plotCompon){
-		yy1plot <- (yy2.1 +min(data[[i]]$x))*ZOIcor[i]
+		yy1plot <- (yy2.1 +min(data[[i]]$x))
 		yy1plot[yy1plot <0] <-0
-		yy2plot <- (yy2.2 +min(data[[i]]$x))*ZOIcor[i]
+		yy2plot <- (yy2.2 +min(data[[i]]$x))
 		yy2plot[yy2plot <0] <-0
 		points(exp(xx), yy1plot , type="l", col="orange", lwd=2, lty=2)	
 		points(exp(xx), yy2plot, type="l", col="orange", lwd=2, lty=2)	
@@ -759,7 +760,6 @@ plotAUC <- function(projectName, ML , ML2, stand,  clearHaloStand, ZOIcor, stand
 		yplots<- ceiling(length(data)/xplots)}
 	else {yplots<- 6}
 	numpages <- ceiling(length(data)/(xplots*yplots))
-	print(numpages)
 	pdf(t, width=width, height=height)
 	par(mfrow=c(yplots , xplots), mar=c(1,1,1,1), oma=c(4,5,1,1))
 	for (k in 1:length(data)){
@@ -1070,7 +1070,7 @@ findSlope <- function(data, ML, i, stand, ZOIcor, clearHaloStand, dotedge = 3.4,
 	data[[i]]$distance <- data[[i]]$distance - (dotedge+0.5)
 	xx <- seq(log(data[[i]]$distance[1]), log(max(data[[i]][,1])), length=200)
 	yy<- curve(ML[[i]]['par'][1]$par[1], ML[[i]]['par'][1]$par[2], ML[[i]]['par'][1]$par[3],xx)
-	yycor <- (yy+min(data[[i]]$x))*ZOIcor[i]
+	yycor <- (yy+min(data[[i]]$x))
 	xcross <- exp(ML[[i]]['par'][1]$par[2])
 	xxmid <- which.max(exp(xx) > xcross)
 	if ((xxmid-10) > 1){
@@ -1091,7 +1091,7 @@ findSlope <- function(data, ML, i, stand, ZOIcor, clearHaloStand, dotedge = 3.4,
 		axis(2, las=2)
 		axis(1)
 		abline(v=xcross)		
-		points(xxSlope, (yySlope+min(data[[i]]$x))*ZOIcor[i], pch=19)
+		points(xxSlope, (yySlope+min(data[[i]]$x)), pch=19)
 		model <- lm(yySlope ~ xxSlope)
 		abline(model)
 	}
@@ -1110,10 +1110,10 @@ findAUC <- function(data, ML, ML2, stand, clearHaloStand, ZOIcor, dotedge = 3.4,
 	ploty <- data[[i]]$x
 	ploty[ploty < 0] <-0
 	slope <- ML[[i]]$par[3]
-	asym <- (ML[[i]]$par[1]+min(data[[i]]$x))*ZOIcor[i]		
+	asym <- (ML[[i]]$par[1]+min(data[[i]]$x))
 
 	xx <- seq(log(data[[i]]$distance[1]), log(max(data[[i]][,1])), length=200) 				
-	yy <- (yy+min(data[[i]]$x))*ZOIcor[i]	
+	yy <- (yy+min(data[[i]]$x))
 	yy[yy < 0] <- 0		
 	x80 <- xx[which.max(yy> asym * 0.2)]
 	x50 <- xx[which.max(yy> asym * 0.5)]
@@ -1151,13 +1151,13 @@ findAUC <- function(data, ML, ML2, stand, clearHaloStand, ZOIcor, dotedge = 3.4,
 	yy50<- curve2(ML2[[i]]$par[1], ML2[[i]]$par[2], ML2[[i]]$par[3], ML2[[i]]$par[5], ML2[[i]]$par[6], ML2[[i]]$par[7], xx50)
 	yy10<- curve2(ML2[[i]]$par[1], ML2[[i]]$par[2], ML2[[i]]$par[3], ML2[[i]]$par[5], ML2[[i]]$par[6], ML2[[i]]$par[7], xx10) 
 		
-	yy <- (yy+min(data[[i]]$x))*ZOIcor[i]	
+	yy <- (yy+min(data[[i]]$x))	
 	yy[yy < 0] <- 0.1
-	yy80 <- (yy80+min(data[[i]]$x))*ZOIcor[i]
+	yy80 <- (yy80+min(data[[i]]$x))
 	yy80[yy80 < 0] <- 0.1
-	yy50 <- (yy50+min(data[[i]]$x))*ZOIcor[i]
+	yy50 <- (yy50+min(data[[i]]$x))
 	yy50[yy50 < 0] <- 0.1
-	yy10 <- (yy10+min(data[[i]]$x))*ZOIcor[i]
+	yy10 <- (yy10+min(data[[i]]$x))
 	yy10[yy10 < 0] <- 0.1
 
 			
