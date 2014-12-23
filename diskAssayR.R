@@ -672,9 +672,6 @@ singleAUC <- function(data, ML, ML2, stand, clearHaloStand, dotedge = 3.4, maxDi
 	xx <- seq(log(data[[i]]$distance[1]), log(max(data[[i]][,1])), length=200) 	
 	
 	###new 14.10.15###
-	# xx80 <- exp(xx[which.max(yyplot> yyplot[length(yyplot)] * 0.2)])
-	# xx50 <- exp(xx[which.max(yyplot> yyplot[length(yyplot)] * 0.5)])
-	# xx10 <- exp(xx[which.max(yyplot> yyplot[length(yyplot)] * 0.9)])
 	xx80 <- exp(xx[which.max(yyplot> asym * 0.2)])
 	xx50 <- exp(xx[which.max(yyplot> asym * 0.5)])
 	xx10 <- exp(xx[which.max(yyplot> asym * 0.9)])
